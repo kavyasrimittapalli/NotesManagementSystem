@@ -111,7 +111,7 @@ def login():
         password = request.form['password']
 
         conn = get_db_connection()
-        cur = conn.cursor(dictionary=True)
+        cur = conn.cursor()
         cur.execute("SELECT * FROM user WHERE username=?", (username,))
         user = cur.fetchone()
         cur.close()
