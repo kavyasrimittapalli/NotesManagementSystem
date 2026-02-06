@@ -178,7 +178,7 @@ def viewall():
         return redirect('/login')
 
     conn = get_db_connection()
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor()
     cur.execute(
         "SELECT id,title,content,created_at FROM notes WHERE user_id=? ORDER BY created_at DESC",
         (session['user_id'],)
@@ -198,7 +198,7 @@ def viewnotes(note_id):
         return redirect('/login')
 
     conn = get_db_connection()
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor()
     cur.execute(
         "SELECT * FROM notes WHERE id=? AND user_id=?",
         (note_id, session['user_id'])
@@ -222,7 +222,7 @@ def updatenote(note_id):
         return redirect('/login')
 
     conn = get_db_connection()
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor()
 
     cur.execute(
         "SELECT * FROM notes WHERE id=? AND user_id=?",
@@ -312,6 +312,8 @@ def reset_password(token):
         cur = conn.cursor()
         cur.execute("UPDATE user SET password=? WHERE email=?", (hashed_pw, email))
         conn.commit()
+        cur.close()
+        conn.close()
 
         flash("Password reset successful. Please login.")
         return redirect('/login')
@@ -330,7 +332,7 @@ def search():
     user_id = session['user_id']
 
     conn = get_db_connection()
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor()
 
     if query:
         cur.execute("""
